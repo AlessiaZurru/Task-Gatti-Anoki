@@ -3,35 +3,34 @@ import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
 
 function Feed() {
-  const timer = (ms) => new Promise((res) => setTimeout(res, ms));
-
-  function handleClick() {
-    console.log(imageArray);
-  }
   const [imageArray, setImageArray] = useState([]);
-
-  const executeLoop = async () => {
-    for (let i = 0; i < 8; i++) {
-      const res = await axios.get("https://api.thecatapi.com/v1/images/search");
-      let items = [...imageArray]; // problema di fondo
-      if (items[i]) {
-        items[i] = res.data[0].url;
-        setImageArray(items);
-      } else setImageArray((prev) => [...prev, res.data[0].url]);
-      await timer(5000);
-    }
-  };
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     // codice2
     async function fetching() {
-      executeLoop();
-      setInterval(() => {
-        executeLoop();
-      }, 5000 * 8);
+      console.log(imageArray, counter);
+      const res = await axios.get("https://api.thecatapi.com/v1/images/search");
+      if (counter > 8) {
+        let items = [...imageArray];
+        items[counter % 9] = res.data[0].url;
+        setImageArray(items);
+        setCounter(counter + 1);
+      } else {
+        setImageArray([...imageArray, res.data[0].url]);
+        setCounter(counter + 1);
+      }
     }
-    fetching();
-  }, []);
+
+    setTimeout(() => {
+      fetching();
+    }, 1000);
+  }, [imageArray, counter]);
+
+  function handleClick() {
+    setCounter(0);
+    setImageArray([]);
+  }
 
   return (
     <>
