@@ -35,12 +35,16 @@ function Feed() {
   return (
     <>
       <Container fluid>
-        <button onClick={handleClick}>cliccami</button>
+        <button onClick={handleClick} className="button">
+          Cliccami
+        </button>
         <Row>
           {imageArray.map((element, index) => {
             return (
               <Col lg={4} xs={12} key={index}>
-                <img src={element} alt={index} className="img-fluid" />
+                <div className="image--container">
+                  <img src={element} alt={index} className="image" />
+                </div>
               </Col>
             );
           })}
